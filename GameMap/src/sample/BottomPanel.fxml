@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane fx:controller="sample.ClientManager" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="810.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <TabPane layoutY="510.0" prefHeight="100.0" prefWidth="810.0" style="-fx-background-color: White;" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+            <Tab text="Normal Buildings">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="barracks" layoutX="14.0" layoutY="22.0" mnemonicParsing="false" text="Barracks"  />
+                        <Button fx:id="seaport" layoutX="77.0" layoutY="22.0" mnemonicParsing="false" text="Seaport" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="Boosters">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                        <children>
+                            <Button fx:id="farm" layoutX="14.0" layoutY="22.0" mnemonicParsing="false" text="Farm" />
+                            <Button fx:id="goldmine" layoutX="55.0" layoutY="22.0" mnemonicParsing="false" text="Gold mine" />
+                            <Button fx:id="woodworkshop" layoutX="127.0" layoutY="22.0" mnemonicParsing="false" text="Wood workshop" />
+                        </children>
+                    </AnchorPane>
+                </content>
+            </Tab>
+            <Tab text="Castle Stuff">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                        <children>
+                            <Button layoutX="14.0" layoutY="29.0" mnemonicParsing="false" text="Worker" />
+                        </children>
+                    </AnchorPane>
+                </content>
+            </Tab>
+            <Tab text="Army Stuff">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="29.0" layoutY="22.0" mnemonicParsing="false" text="Soldier" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="Ships">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="80.0" layoutY="22.0" mnemonicParsing="false" text="Transport" />
+                        <Button layoutX="28.0" layoutY="22.0" mnemonicParsing="false" text="Fishing" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+      <ImageView fitHeight="55.0" fitWidth="49.0" layoutX="551.0" pickOnBounds="true" preserveRatio="true" />
+   </children>
+</AnchorPane>
