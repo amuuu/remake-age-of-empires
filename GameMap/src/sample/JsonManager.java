@@ -47,7 +47,6 @@ public class JsonManager {
         }
 
         try {
-//            FileWriter filewriter = new FileWriter("C:\\Users\\Enigma\\Desktop\\GameMap\\GameMap\\src\\json\\testmap.json");
             FileWriter filewriter = new FileWriter("src/json/testmap.json");
             JsonWriter jsonWriter = new JsonWriter(filewriter);
             jsonWriter.beginObject();
@@ -58,15 +57,12 @@ public class JsonManager {
             jsonWriter.beginArray();
             for(int i=0; i<objs.size();i++) {
                 jsonWriter.value(objs.get(i).getAsInt());
-//                System.out.println(objs.get(i).getAsInt());
             }
             jsonWriter.endArray();
             jsonWriter.endObject();
             jsonWriter.endArray();
             jsonWriter.endObject();
-//            jsonWriter.endArray();
             jsonWriter.close();
-
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -21,16 +21,17 @@ import java.util.ResourceBundle;
 
 public class ClientManager extends Application implements Initializable{
 
-    private static final int WINDOW_HEIGHT = 600;
-    private static final int WINDOW_WIDTH = 800;
+    static final int WINDOW_HEIGHT = 600;
+    static final int WINDOW_WIDTH = 800;
 
-    private static final int TILE_WIDTH = 32;
-    private static final int TILE_HEIGHT = TILE_WIDTH;
+    static final int TILE_WIDTH = 32;
+    static final int TILE_HEIGHT = TILE_WIDTH;
 
-    private static final int TOTAL_HOUSE_NUMBER = 1600;
-    private static final int ROW_NUMBERS = 40;
+    static final int TOTAL_HOUSE_NUMBER = 1600;
+    static final int ROW_NUMBERS = 40;
 
-    private static final int CAMERA_PADDING = 10;
+    static final int CAMERA_PADDING = 10;
+
     public  int ali  =0 ;
     private boolean barracksButtonClicked = false;
     private boolean farmButtonClicked = false;
@@ -41,6 +42,9 @@ public class ClientManager extends Application implements Initializable{
     static private JsonManager mapJSON;
     private static ImageView [] mapImages;
     private static List<Integer> mapTiles;
+
+    int cordinateXTransform =0;
+    int cordinateYTransform =0;
 
     @FXML
     private Button barracks = new Button();
@@ -63,7 +67,7 @@ public class ClientManager extends Application implements Initializable{
     private static void makeMapOutline(){
         mapImages = new ImageView[TOTAL_HOUSE_NUMBER];
         for(int i = 0; i < TOTAL_HOUSE_NUMBER; i++) {
-            System.out.println(mapTiles.get(i));
+//            System.out.println(mapTiles.get(i));
             for(int j=0;j<58;j++) {
                 if (mapTiles.get(i)==(j+1)) {
                     mapImages[i] = new ImageView(fileManager.id[j]);
@@ -122,7 +126,6 @@ public class ClientManager extends Application implements Initializable{
         return houseNumber;
     }
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources){
         barracks.setOnAction(new EventHandler<ActionEvent>(){
@@ -130,8 +133,8 @@ public class ClientManager extends Application implements Initializable{
             public void handle (ActionEvent event){
                 barracksButtonClicked = true;
                 ali =1 ;
-                System.out.println(ali+"ali");
-                System.out.println(barracksButtonClicked);
+//                System.out.println(ali+"ali");
+//                System.out.println(barracksButtonClicked);
             }
         });
         seaport.setOnAction(new EventHandler<ActionEvent>(){
@@ -169,7 +172,7 @@ public class ClientManager extends Application implements Initializable{
         Group photos = new Group();
         window.getChildren().add(photos);
         window.getChildren().add(root);
-        System.out.println(ali);
+//        System.out.println(ali);
         Scene scene = new Scene(window,WINDOW_WIDTH,WINDOW_HEIGHT);
 
         initPrintMap();
@@ -177,65 +180,66 @@ public class ClientManager extends Application implements Initializable{
             photos.getChildren().add(mapImages[i]);
         }
 
-        scene.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
+        scene.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>(){
 
-            int bg_x=0;
-            int bg_y=0;
+            int mouseMovePace = 5;
             @Override
             public void handle(MouseEvent mouseEvent) {
 
-                window.getScaleX();
-//               System.out.println(photos.getScaleX());
                 int mouseX = (int)mouseEvent.getSceneX();
                 int mouseY = (int)mouseEvent.getSceneY();
+
+                mouseMover(mouseX, mouseY);
+            }
+
+            public void mouseMover(int mouseX, int mouseY) {
+                window.getScaleX();
                 int end_x = -432;
-                int end_y= -766;
-                int end_xy=0;
+                int end_y = -766;
+                int end_xy = 0;
                 /* ...  left and right ...  */
-                if(mouseX>WINDOW_WIDTH-CAMERA_PADDING) {
-                    if(bg_x>end_x) bg_x-=5;
-                    //else if (photos.getScaleX()>1){if(bg_x >-600) bg_x-=5; }
-                  //else  if(photos.getScaleX())
+                if (mouseX > WINDOW_WIDTH - CAMERA_PADDING) {
+                    if (cordinateXTransform > end_x) cordinateXTransform -= mouseMovePace;
                 }
-                if(mouseX<CAMERA_PADDING) {
-                    if(bg_x<end_xy) bg_x+=5;
+                if (mouseX < CAMERA_PADDING) {
+                    if (cordinateXTransform < end_xy) cordinateXTransform += mouseMovePace;
                 }
                 /*  .. up and down ..  */
-                if(mouseY>WINDOW_HEIGHT-110 && mouseY<WINDOW_HEIGHT-101) {
-                    if(bg_y>end_y) bg_y-=5;
+                if (mouseY > WINDOW_HEIGHT - 110 && mouseY < WINDOW_HEIGHT - 101) {
+                    if (cordinateYTransform > end_y) cordinateYTransform -= mouseMovePace;
                 }
-                if(mouseY<CAMERA_PADDING) {
-                    if(bg_y<end_xy) bg_y+=5;
-                }
-                /*  ....  */
-                if(mouseX>WINDOW_WIDTH-CAMERA_PADDING && mouseY>WINDOW_HEIGHT-110 && mouseY<WINDOW_HEIGHT -100){
-                    if(bg_x>end_x){
-                        bg_x-=5;
-                        if(bg_y>end_y) bg_y-=5;
-                    }
-                }
-                if(mouseX<CAMERA_PADDING && mouseY>WINDOW_HEIGHT-110 && mouseY<WINDOW_HEIGHT-100){
-                    if(bg_x<end_xy) {
-                        bg_x += 5;
-                        if (bg_y > end_y) bg_y -= 5;
-                    }
-                }
-                if(mouseX<CAMERA_PADDING && mouseY<CAMERA_PADDING){
-                    if(bg_x<end_xy) {
-                        bg_x += 5;
-                        if (bg_y < end_xy) bg_y += 5;
-                    }
-                }
-                if(mouseX>WINDOW_WIDTH-CAMERA_PADDING && mouseY<CAMERA_PADDING){
-                    if(bg_x>end_x)
-                        bg_x-=5;
-                    if(bg_y<end_xy) bg_y+=5;
+                if (mouseY < CAMERA_PADDING) {
+                    if (cordinateYTransform < end_xy) cordinateYTransform += mouseMovePace;
                 }
                 /*  ....  */
-                photos.setLayoutX(bg_x);
-                photos.setLayoutY(bg_y);
-
+                if (mouseX > WINDOW_WIDTH - CAMERA_PADDING && mouseY > WINDOW_HEIGHT - 110 && mouseY < WINDOW_HEIGHT - 100) {
+                    if (cordinateXTransform > end_x) {
+                        cordinateXTransform -= mouseMovePace;
+                        if (cordinateYTransform > end_y) cordinateYTransform -= mouseMovePace;
+                    }
+                }
+                if (mouseX < CAMERA_PADDING && mouseY > WINDOW_HEIGHT - 110 && mouseY < WINDOW_HEIGHT - 100) {
+                    if (cordinateXTransform < end_xy) {
+                        cordinateXTransform += mouseMovePace;
+                        if (cordinateYTransform > end_y) cordinateYTransform -= mouseMovePace;
+                    }
+                }
+                if (mouseX < CAMERA_PADDING && mouseY < CAMERA_PADDING) {
+                    if (cordinateXTransform < end_xy) {
+                        cordinateXTransform += mouseMovePace;
+                        if (cordinateYTransform < end_xy) cordinateYTransform += mouseMovePace;
+                    }
+                }
+                if (mouseX > WINDOW_WIDTH - CAMERA_PADDING && mouseY < CAMERA_PADDING) {
+                    if (cordinateXTransform > end_x)
+                        cordinateXTransform -= mouseMovePace;
+                    if (cordinateYTransform < end_xy) cordinateYTransform += mouseMovePace;
+                }
+                /*  ....  */
+                photos.setLayoutX(cordinateXTransform);
+                photos.setLayoutY(cordinateYTransform);
             }
+
         });
 
         scene.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
@@ -243,26 +247,30 @@ public class ClientManager extends Application implements Initializable{
             @Override
             public void handle(MouseEvent mouseEvent) {
                 int house_number;
-                int mouseX = (int)mouseEvent.getSceneX();
-                int mouseY = (int)mouseEvent.getSceneY();
-                if (mouseY < WINDOW_HEIGHT - 100) {
+                System.out.println("cordinateXTransform is " + cordinateXTransform);
+                System.out.println("cordinateYTransform is " + cordinateYTransform);
+
+                int mouseX = (int)mouseEvent.getSceneX() - cordinateXTransform;
+                int mouseY = (int)mouseEvent.getSceneY() - cordinateYTransform;
+
+                if (mouseY+cordinateYTransform < WINDOW_HEIGHT - 100) {
 //                    if(barracksButtonClicked) {
                         house_number = returnHouseNumber(mouseX, mouseY);
+                        System.out.println("house number is " + house_number);
                         mapJSON.setHouse(house_number, 38);
+
                         try {
                             initPrintMap();
-                            for (int i = 0; i < TOTAL_HOUSE_NUMBER; i++) {
+                            for (int i = 0; i < TOTAL_HOUSE_NUMBER; i++)
                                 photos.getChildren().add(mapImages[i]);
-                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                         barracksButtonClicked = false;
-                    }
-//                }
+//                    }
+                }
             }
         });
-
 
         window.setOnScroll(new EventHandler<ScrollEvent>() {
             double zoomFactor = 1;
@@ -287,6 +295,8 @@ public class ClientManager extends Application implements Initializable{
         primaryStage.show();
 
     }
+
+
     public static void main(String[] args) {
         launch(args);
     }
