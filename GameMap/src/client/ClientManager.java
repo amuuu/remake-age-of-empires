@@ -40,6 +40,9 @@ public class ClientManager extends Application{
         window.getChildren().add(root);
         scene = new Scene(window,WINDOW_WIDTH,WINDOW_HEIGHT);
 
+        ioManager = new IOManager("");
+        ioManager.start();
+
         initPrintMap();
         for(int i=0; i<TOTAL_HOUSE_NUMBER;i++)
             photos.getChildren().add(mapImages[i]);

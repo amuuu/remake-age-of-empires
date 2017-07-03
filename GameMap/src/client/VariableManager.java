@@ -33,6 +33,6 @@ public class VariableManager {
 
     // Other classes objects
     static FileManager fileManager;
-
+    static IOManager ioManager;
 
 }
