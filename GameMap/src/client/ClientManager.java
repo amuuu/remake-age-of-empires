@@ -1,4 +1,4 @@
-package sample;
+package client;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -19,166 +19,30 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class ClientManager extends Application implements Initializable{
+import static client.FXMLController.*;
+import static client.MapManager.initPrintMap;
+import static client.MapManager.returnHouseNumber;
+import static client.VariableManager.*;
 
-    static final int WINDOW_HEIGHT = 600;
-    static final int WINDOW_WIDTH = 800;
+public class ClientManager extends Application{
 
-    static final int TILE_WIDTH = 32;
-    static final int TILE_HEIGHT = TILE_WIDTH;
-
-    static final int TOTAL_HOUSE_NUMBER = 1600;
-    static final int ROW_NUMBERS = 40;
-
-    static final int CAMERA_PADDING = 10;
-
-    public  int ali  =0 ;
-    private boolean barracksButtonClicked = false;
-    private boolean farmButtonClicked = false;
-    private boolean goldmineButtonClicked = false;
-    private boolean woodworkshopButtonClicked = false;
-    private boolean seaportButtonClicked = false;
-
-    static private JsonManager mapJSON;
-    private static ImageView [] mapImages;
-    private static List<Integer> mapTiles;
-
-    int cordinateXTransform =0;
-    int cordinateYTransform =0;
-
-    @FXML
-    private Button barracks = new Button();
-    @FXML
-    private Button seaport = new Button();
-    @FXML
-    private Button farm = new Button();
-    @FXML
-    private Button goldmine = new Button();
-    @FXML
-    private Button woodworkshop = new Button();
-
-    static FileManager fileManager;
-
-    private static void readJSONMap() {
-        mapJSON = new JsonManager();
-        mapJSON.readMap();
-        mapTiles = mapJSON.objectList();
-    }
-    private static void makeMapOutline(){
-        mapImages = new ImageView[TOTAL_HOUSE_NUMBER];
-        for(int i = 0; i < TOTAL_HOUSE_NUMBER; i++) {
-//            System.out.println(mapTiles.get(i));
-            for(int j=0;j<58;j++) {
-                if (mapTiles.get(i)==(j+1)) {
-                    mapImages[i] = new ImageView(fileManager.id[j]);
-//                    System.out.println("yes");
-                    break;
-                }
-                else {
-                    mapImages[i] = new ImageView(fileManager.id[29]);
-                }
-            }
-            mapImages[i].setX(returnColumn(i+2)*TILE_WIDTH);
-            mapImages[i].setY(returnRow(i+2)*TILE_HEIGHT);
-        }
-    }
-    private static void initPrintMap() throws Exception {
-        fileManager = new FileManager();
-        readJSONMap();
-        makeMapOutline();
-    }
-    private static int returnColumn (int homeNumber){
-        int columnNumber=0;
-        for (int i = 0; i< TOTAL_HOUSE_NUMBER; i++){
-            if(i==homeNumber) break;
-            else {
-                if (i % (ROW_NUMBERS) == 1) {
-                    columnNumber = 0;
-                } else {
-                    columnNumber++;
-                }
-            }
-        }
-        return columnNumber;
-    }
-    private static int returnRow (int homeNumber){
-        int rowNumber=0;
-        for (int i = 0; i< TOTAL_HOUSE_NUMBER; i++){
-            if(i==homeNumber) break;
-            else{
-                if(i%(ROW_NUMBERS)==1) {
-                    rowNumber++;
-                }
-                else{}
-            }
-        }
-        return --rowNumber;
-    }
-    public static int returnHouseNumber (int x, int y){
-        int houseNumber = -1;
-        for(int i=0; i<TOTAL_HOUSE_NUMBER; i++){
-            if(x>=returnColumn(i)*TILE_WIDTH && x<returnColumn(i)*TILE_WIDTH+TILE_WIDTH
-            && y>=returnRow(i)*TILE_HEIGHT && y<returnRow(i)*TILE_HEIGHT+TILE_HEIGHT) {
-                houseNumber = i;
-                break;
-            }
-        }
-        return houseNumber;
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources){
-        barracks.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle (ActionEvent event){
-                barracksButtonClicked = true;
-                ali =1 ;
-//                System.out.println(ali+"ali");
-//                System.out.println(barracksButtonClicked);
-            }
-        });
-        seaport.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle (ActionEvent event){
-                seaportButtonClicked = true;
-            }
-        });
-        farm.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle (ActionEvent event){
-                farmButtonClicked = true;
-            }
-        });
-        goldmine.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle (ActionEvent event){
-                goldmineButtonClicked = true;
-            }
-        });
-        woodworkshop.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle (ActionEvent event){
-                woodworkshopButtonClicked = true;
-            }
-        });
-    }
+    static Parent root;
+    static Group window;
+    static Group photos;
+    static Scene scene;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        primaryStage.setTitle("Age of Empires");
-        primaryStage.setResizable(false);
-        Parent root = FXMLLoader.load(getClass().getResource("BottomPanel.fxml"));
-        Group window = new Group();
-        Group photos = new Group();
+        root = FXMLLoader.load(getClass().getResource("BottomPanel.fxml"));
+        window = new Group();
+        photos = new Group();
         window.getChildren().add(photos);
         window.getChildren().add(root);
-//        System.out.println(ali);
-        Scene scene = new Scene(window,WINDOW_WIDTH,WINDOW_HEIGHT);
+        scene = new Scene(window,WINDOW_WIDTH,WINDOW_HEIGHT);
 
         initPrintMap();
-        for(int i=0; i<TOTAL_HOUSE_NUMBER;i++){
+        for(int i=0; i<TOTAL_HOUSE_NUMBER;i++)
             photos.getChildren().add(mapImages[i]);
-        }
 
         scene.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>(){
 
@@ -241,15 +105,11 @@ public class ClientManager extends Application implements Initializable{
             }
 
         });
-
         scene.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 
             @Override
             public void handle(MouseEvent mouseEvent) {
                 int house_number;
-                System.out.println("cordinateXTransform is " + cordinateXTransform);
-                System.out.println("cordinateYTransform is " + cordinateYTransform);
-
                 int mouseX = (int)mouseEvent.getSceneX() - cordinateXTransform;
                 int mouseY = (int)mouseEvent.getSceneY() - cordinateYTransform;
 
@@ -266,19 +126,13 @@ public class ClientManager extends Application implements Initializable{
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        barracksButtonClicked = false;
+//                        barracksButtonClicked = false;
 //                    }
                 }
             }
         });
-
         window.setOnScroll(new EventHandler<ScrollEvent>() {
             double zoomFactor = 1;
-
-            public double getZoomFactor() {
-                return zoomFactor;
-            }
-
             @Override
             public void handle(ScrollEvent event) {
                 double deltaY = event.getDeltaY();
@@ -291,11 +145,12 @@ public class ClientManager extends Application implements Initializable{
             }
         });
 
+        primaryStage.setTitle("Age of Empires AMUKIALI");
+        primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
 
     }
-
 
     public static void main(String[] args) {
         launch(args);
