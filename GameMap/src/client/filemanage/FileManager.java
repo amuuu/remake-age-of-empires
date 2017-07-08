@@ -1,4 +1,4 @@
-package client;
+package client.filemanage;
 
 import javafx.scene.image.Image;
 
@@ -6,7 +6,7 @@ public class FileManager {
 
     public Image []id = new Image[58];
 
-    FileManager() throws Exception{
+    public FileManager() throws Exception{
         loadImages();
     }
 

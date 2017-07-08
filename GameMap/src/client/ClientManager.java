@@ -1,28 +1,19 @@
 package client;
 
+import client.iomanage.IOManager;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.stage.Stage;
 
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
-
-import static client.FXMLController.*;
-import static client.MapManager.initPrintMap;
-import static client.MapManager.returnHouseNumber;
-import static client.VariableManager.*;
+import static client.mapmanage.MapMethodManager.initPrintMap;
+import static client.mapmanage.MapMethodManager.returnHouseNumber;
+import static client.variablerepo.VariableManager.*;
 
 public class ClientManager extends Application{
 
@@ -33,19 +24,22 @@ public class ClientManager extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        root = FXMLLoader.load(getClass().getResource("BottomPanel.fxml"));
+        root = FXMLLoader.load(getClass().getResource("fxmlmanage/BottomPanel.fxml"));
         window = new Group();
         photos = new Group();
         window.getChildren().add(photos);
         window.getChildren().add(root);
         scene = new Scene(window,WINDOW_WIDTH,WINDOW_HEIGHT);
 
-        ioManager = new IOManager("");
-        ioManager.start();
-
         initPrintMap();
         for(int i=0; i<TOTAL_HOUSE_NUMBER;i++)
             photos.getChildren().add(mapImages[i]);
+
+
+        ioManager = new IOManager("192.168.100.6");
+        if(ioManager!=null) System.out.println("yes");
+        ioManager.start();
+        System.out.println(ioManager.isAlive());
 
         scene.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>(){
 

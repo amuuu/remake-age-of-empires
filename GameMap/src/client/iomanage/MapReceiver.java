@@ -1,11 +1,14 @@
-package client;
+package client.iomanage;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
 
 public class MapReceiver {
     Socket socket = null;
-    String ip;
+    String ip = "127.0.0.1";
 
     public void makeConnection() throws IOException {
         socket = new Socket(ip,15123);
@@ -34,7 +37,7 @@ public class MapReceiver {
             bytesRead = is.read(bytearray, currentTot, (bytearray.length-currentTot));
             if(bytesRead >= 0) currentTot += bytesRead;
 
-        } while(bytesRead >-1);
+        } while(bytesRead >0);
 
         bos.write(bytearray, 0 , currentTot);
 

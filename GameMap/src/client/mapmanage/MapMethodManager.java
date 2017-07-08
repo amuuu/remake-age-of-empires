@@ -1,14 +1,15 @@
-package client;
+package client.mapmanage;
+
+import client.jsonmanage.JsonManager;
+import client.filemanage.FileManager;
 
 import javafx.scene.image.ImageView;
 
-import static client.VariableManager.*;
-import static client.VariableManager.TILE_HEIGHT;
-import static client.VariableManager.TILE_WIDTH;
+import static client.variablerepo.VariableManager.*;
 
-public class MapManager {
+public class MapMethodManager {
 
-    static void initPrintMap() throws Exception {
+    public static void initPrintMap() throws Exception {
         fileManager = new FileManager();
         readJSONMap();
         makeMapOutline();
@@ -64,7 +65,7 @@ public class MapManager {
         }
         return --rowNumber;
     }
-    static int returnHouseNumber (int x, int y){
+    public static int returnHouseNumber(int x, int y){
         int houseNumber = -1;
         for(int i=0; i<TOTAL_HOUSE_NUMBER; i++){
             if(x>=returnColumn(i)*TILE_WIDTH && x<returnColumn(i)*TILE_WIDTH+TILE_WIDTH

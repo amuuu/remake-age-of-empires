@@ -1,6 +1,9 @@
-package client;
+package client.jsonmanage;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonWriter;
 
@@ -16,7 +19,7 @@ public class JsonManager {
     JsonArray objs;
 
     public void readMap() {
-        convertFileToJSON ("src/json/testmap.json");
+        convertFileToJSON ("src/json/map.json");
     }
 
     public void convertFileToJSON (String fileName){
@@ -32,7 +35,7 @@ public class JsonManager {
         }
     }
 
-    List<Integer> objectList(){
+    public List<Integer> objectList(){
         Type listType = new TypeToken<List<Integer>>() {}.getType();
         List<Integer> yourList = new Gson().fromJson(objs, listType);
         return yourList;
@@ -47,7 +50,7 @@ public class JsonManager {
         }
 
         try {
-            FileWriter filewriter = new FileWriter("src/json/testmap.json");
+            FileWriter filewriter = new FileWriter("src/json/map.json");
             JsonWriter jsonWriter = new JsonWriter(filewriter);
             jsonWriter.beginObject();
             jsonWriter.name("layers");

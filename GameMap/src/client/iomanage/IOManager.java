@@ -1,4 +1,4 @@
-package client;
+package client.iomanage;
 
 public class IOManager extends Thread{
 
@@ -13,12 +13,15 @@ public class IOManager extends Thread{
 
     @Override
     public void run(){
+        System.out.println("we are in thread");
         while (true){
+            System.out.println("we are in while");
             try {
-                mapSender.sendMap("src/json/testmap.json");
-                Thread.sleep(250);
-                mapReciver.receiveMap("src/json/testmap.json");
-                Thread.sleep(250);
+                mapSender.sendMap("src/json/map.json");
+                Thread.sleep(20000);
+//                mapReciver.receiveMap("src/json/map.json");
+//                Thread.sleep(250);
+//                System.out.println(c);
             }
             catch (Exception e) {
                 e.printStackTrace();
