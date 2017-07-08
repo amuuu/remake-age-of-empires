@@ -1,16 +1,22 @@
 package client.mapmanage;
 
-import client.jsonmanage.JsonManager;
 import client.filemanage.FileManager;
-
+import client.iomanage.IOManager;
+import client.jsonmanage.JsonManager;
 import javafx.scene.image.ImageView;
 
-import static client.variablerepo.VariableManager.*;
+import static client.mapmanage.variablerepo.Consts.*;
+import static client.mapmanage.variablerepo.VariableManager.*;
 
 public class MapMethodManager {
 
-    public static void initPrintMap() throws Exception {
+    public static void makeManagers() throws Exception {
         fileManager = new FileManager();
+        ioManager = new IOManager("192.168.100.6");
+
+    }
+
+    public static void initPrintMap() throws Exception {
         readJSONMap();
         makeMapOutline();
     }
@@ -22,11 +28,9 @@ public class MapMethodManager {
     private static void makeMapOutline(){
         mapImages = new ImageView[TOTAL_HOUSE_NUMBER];
         for(int i = 0; i < TOTAL_HOUSE_NUMBER; i++) {
-//            System.out.println(mapTiles.get(i));
             for(int j=0;j<58;j++) {
                 if (mapTiles.get(i)==(j+1)) {
                     mapImages[i] = new ImageView(fileManager.id[j]);
-//                    System.out.println("yes");
                     break;
                 }
                 else {

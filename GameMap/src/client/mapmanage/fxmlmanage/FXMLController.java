@@ -1,4 +1,4 @@
-package client.fxmlmanage;
+package client.mapmanage.fxmlmanage;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
