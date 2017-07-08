@@ -46,5 +46,5 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-GameMap/out
-GameMap/.idea
+#GameMap/out
+#GameMap/.idea
