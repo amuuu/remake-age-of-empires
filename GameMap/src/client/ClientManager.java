@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 
 import static client.mapmanage.MapMethodManager.*;
 import static client.mapmanage.variablerepo.Consts.*;
-import static client.mapmanage.variablerepo.VariableManager.*;
+import static client.mapmanage.variablerepo.Variables.*;
 
 public class ClientManager extends Application{
 

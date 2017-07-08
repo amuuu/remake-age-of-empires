@@ -12,7 +12,7 @@ public class FileManager {
 
     public void loadImages() throws Exception{
         for(int i=0;i<58;i++) {
-            String address = "file:src/json/icons/images/"+(i+49)+".gif";
+            String address = "file:src/images/"+(i+49)+".gif";
             id[i] = new Image(address, 32, 32, false, false);
         }
     }

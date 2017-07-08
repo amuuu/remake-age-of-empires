@@ -6,7 +6,7 @@ import client.jsonmanage.JsonManager;
 import javafx.scene.image.ImageView;
 
 import static client.mapmanage.variablerepo.Consts.*;
-import static client.mapmanage.variablerepo.VariableManager.*;
+import static client.mapmanage.variablerepo.Variables.*;
 
 public class MapMethodManager {
 

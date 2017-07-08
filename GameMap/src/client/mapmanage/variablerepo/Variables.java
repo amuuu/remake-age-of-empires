@@ -7,7 +7,7 @@ import javafx.scene.image.ImageView;
 
 import java.util.List;
 
-public class VariableManager {
+public class Variables {
 
     public static int cordinateXTransform =0;
     public static int cordinateYTransform =0;
