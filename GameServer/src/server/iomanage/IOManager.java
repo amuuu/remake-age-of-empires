@@ -1,30 +1,35 @@
 package server.iomanage;
 
+import server.ClientInfo;
 import server.jsonmanage.JsonManager;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
+
+import static server.ServerManager.gameClients;
+import static server.mapmanage.variablerepo.Consts.ROW_NUMBERS;
+import static server.mapmanage.variablerepo.Consts.TOTAL_HOUSE_NUMBER;
 
 public class IOManager extends Thread{
 
-    MapReceiver mapReciver;
-    MapSender mapSender;
-    JsonManager jsonManager;
+    private MapReceiver mapReceiver;
+    private MapSender mapSender;
+    private JsonManager clientjsonManager;
+    private JsonManager serverjsonmanager;
 
-    ArrayList<String> gameClients;
 
-    List<Integer> currentMap;
-    List<Integer> tempMapList;
+    private List<Integer> currentMap;
+    private List<Integer> tempMapList;
 
-    ArrayList<int[]> toChangeList;
-    ArrayList<Integer> movesList;
-    // Users maps is as big as the number of the users.
+    private Queue<int[]> toChangeList;
+    private ArrayList<Integer> movesList;
 
-    public IOManager(String ip){
-        mapReciver = new MapReceiver();
+    public IOManager(){
+        mapReceiver = new MapReceiver();
         mapSender = new MapSender();
         gameClients = new ArrayList<>();
-        toChangeList = new ArrayList<>();
+        toChangeList = new PriorityQueue<>();
+        serverjsonmanager = new JsonManager();
     }
 
     /**
@@ -45,8 +50,11 @@ public class IOManager extends Thread{
     public void run(){
         int playerNumber = 0;
         while (true) {
+            serverjsonmanager.readJsonMap("src/json/map.json");
+            currentMap = serverjsonmanager.objectList();
             try {
-                mapHandle(playerNumber);
+                mapHandle(gameClients.get(playerNumber));
+                Thread.sleep(500);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -55,61 +63,97 @@ public class IOManager extends Thread{
         }
     }
 
-    private void mapHandle(int playerNumber) throws Exception {
-        mapReciver.receiveMap("192.168.100."+playerNumber+"","tempMap.json");
-        adaptMap("tempMap", playerNumber);
-        broadcastMap("map");
+    private void mapHandle(ClientInfo clientInfo) throws Exception {
+        mapReceiver.receiveMap(clientInfo.ip ,"src/json/tempMap.json");
+        detectMapChanges("src/json/tempMap", Integer.parseInt(clientInfo.id));
+        updateGameMap();
     }
-
-    private void adaptMap(String tempMap, int playerNumber){
-        jsonManager = new JsonManager();
+    private void detectMapChanges(String tempMap, int playerNumber){
+        clientjsonManager = new JsonManager();
         tempMapList = new ArrayList<>();
 
-        jsonManager.readJsonMap(tempMap);
-        tempMapList = jsonManager.objectList();
-        new checkNewBuildings(playerNumber).start();
+        clientjsonManager.readJsonMap(tempMap);
+        tempMapList = clientjsonManager.objectList();
+        checkNewBuildings(playerNumber);
 
         tempMapList = null;
-        jsonManager = null;
+        clientjsonManager = null;
     }
 
-    private void broadcastMap(String map) {
-    }
-
-    private class checkNewBuildings extends Thread {
-        int playerNumber = 0;
-        checkNewBuildings(int playerNumber){
-            this.playerNumber=playerNumber;
-        }
-        @Override
-        public void run(){
-            for (int i = 0; i < currentMap.size(); i++) {
-                if (check(i) != 0) {
-                    int [] info = {playerNumber, check(i), i}; //player, building, where
+    private void checkNewBuildings(int playerNumber){
+            for (int i = 0; i < TOTAL_HOUSE_NUMBER; i++) {
+                if (checkAgent(i) != 0) {
+                    int [] info = {playerNumber, checkAgent(i), i}; //player, building, where
                     toChangeList.add(info);
                 }
             }
-        }
-        private int check(int index){
-            int current = currentMap.get(index);
-            int temp = tempMapList.get(index);
+    }
+    private int checkAgent(int index){
 
-            // nothing changed
-            if (current == temp)
-                return 0;
+        int current = currentMap.get(index);
+        int temp = tempMapList.get(index);
 
-            // check for new building
-            else if (current == 29 &&
-                     temp >= 200 &&
-                     temp < 900)
-                return (temp/100);
+        // nothing changed
+        if (current == temp)
+            return 0;
 
-            return -1;
-        }
+        // check for new building // background number = 29
+        else if (current == 29 &&
+                temp >= 200 &&
+                temp < 800)
+            return (temp/100);
+
+        return -1;
     }
 
+    private void updateGameMap(){
+        /*
+        1. first, put info in server
+        2. then update the json file
+        3. finally send it to every client
+        */
+        while (!toChangeList.isEmpty()) {
+            int [] info = toChangeList.poll();
 
+            int playerNumber = info[0];
+            int buildingNumber = info[1];
+            int buildingPlace = info[2];
+
+            commitChangesToServer();
+            commitChangesToJson(buildingNumber, buildingPlace);
+            broadcastMap();
+        }
+
+    }
+    private void commitChangesToServer(){
+
+    }
+    private void commitChangesToJson(int buildingNumber, int buildingPlace){
+        int buildingSize = 0;
+        if(buildingNumber>=200 &&
+           buildingNumber<500)
+            buildingSize=3;
+        else
+        if(buildingNumber>=500 &&
+           buildingNumber<700)
+            buildingSize=5;
+        else
+        if(buildingNumber>=700 &&
+           buildingNumber<800)
+            buildingSize=7;
+
+        int centerHouseNumber = buildingPlace + ROW_NUMBERS + buildingSize%2;
+
+        serverjsonmanager.setHouse(centerHouseNumber,buildingNumber);
+
+    }
+    private void broadcastMap(){
+        try {
+            for (ClientInfo gameClient : gameClients)
+                mapSender.sendMap("src/map/json", gameClient);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+    }
 }
-
-// background number = 29
-

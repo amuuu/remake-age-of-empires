@@ -1,6 +1,8 @@
 package server.iomanage;
 
 
+import server.ClientInfo;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -8,9 +10,8 @@ import java.net.Socket;
 public class MapSender {
 
     private ServerSocket serverSocket = null;
-    private Socket socket = null;
 
-    public void connectSender() throws IOException {
+    public void connectSender(Socket socket) throws IOException {
         serverSocket = new ServerSocket(15123);
         socket = serverSocket.accept();
 
@@ -21,9 +22,9 @@ public class MapSender {
         System.out.println("Accepted connection : " + socket);
     }
 
-    public void sendMap(String fileName) throws IOException {
+    public void sendMap(String fileName, ClientInfo clientInfo) throws IOException {
 
-        connectSender();
+        connectSender(clientInfo.socket);
         int filesize=39600; //2147483647;
         byte[] bytearray = new byte[filesize];
 
@@ -31,11 +32,11 @@ public class MapSender {
         BufferedInputStream bin = new BufferedInputStream(fin);
         bin.read(bytearray, 0, bytearray.length);
 
-        OutputStream os = socket.getOutputStream();
+        OutputStream os = clientInfo.socket.getOutputStream();
         System.out.println("Sending Files...");
         os.write(bytearray, 0, bytearray.length);
         os.flush();
-        socket.close();
+        clientInfo.socket.close();
         System.out.println("File transfer complete");
 
     }

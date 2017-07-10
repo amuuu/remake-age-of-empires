@@ -13,19 +13,19 @@ public class IOManager extends Thread{
 
     @Override
     public void run(){
-        System.out.println("we are in thread");
-//        while (true){
-            System.out.println("we are in while");
+        while (true){
             try {
                 mapSender.sendMap("src/json/map.json");
-//                Thread.sleep(20000);
-//                mapReciver.receiveMap("src/json/map.json");
-//                Thread.sleep(250);
-//                System.out.println(c);
+                Thread.sleep(500);
+                mapReciver.receiveMap("src/json/map.json");
+                Thread.sleep(500);
             }
             catch (Exception e) {
                 e.printStackTrace();
             }
-//        }
+        }
+    }
+    private void handleMap(){
+
     }
 }
