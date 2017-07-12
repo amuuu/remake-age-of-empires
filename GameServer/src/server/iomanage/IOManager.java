@@ -52,8 +52,11 @@ public class IOManager extends Thread{
         while (true) {
             serverjsonmanager.readJsonMap("src/json/map.json");
             currentMap = serverjsonmanager.objectList();
+
             try {
+                Thread.sleep(500);
                 mapHandle(gameClients.get(playerNumber));
+//                mapReceiver.receiveMap(gameClients.get(playerNumber).ip, "src/json/test.json");
                 Thread.sleep(500);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -66,6 +69,7 @@ public class IOManager extends Thread{
     private void mapHandle(ClientInfo clientInfo) throws Exception {
         mapReceiver.receiveMap(clientInfo.ip ,"src/json/tempMap.json");
         detectMapChanges("src/json/tempMap", Integer.parseInt(clientInfo.id));
+        Thread.sleep(500);
         updateGameMap();
     }
     private void detectMapChanges(String tempMap, int playerNumber){

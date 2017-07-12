@@ -11,9 +11,10 @@ public class MapSender {
 
     private ServerSocket serverSocket = null;
 
-    public void connectSender(Socket socket) throws IOException {
+    public void connectSender(ClientInfo clientInfo) throws IOException {
         serverSocket = new ServerSocket(15123);
-        socket = serverSocket.accept();
+        Socket socket = serverSocket.accept();
+        clientInfo.socket = socket;
 
         if((socket!=null)||(serverSocket!=null)) {
             System.out.println("Not connected");
@@ -24,7 +25,7 @@ public class MapSender {
 
     public void sendMap(String fileName, ClientInfo clientInfo) throws IOException {
 
-        connectSender(clientInfo.socket);
+        connectSender(clientInfo);
         int filesize=39600; //2147483647;
         byte[] bytearray = new byte[filesize];
 

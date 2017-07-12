@@ -13,8 +13,8 @@ public class ServerManager {
     public static void main(String[] args) throws Exception{
         IOManager ioManager = new IOManager();
 
-        gameClients.add(new ClientInfo("ali","0","192.168.100.1",new Socket("192.168.100.1",1234)));
-        gameClients.add(new ClientInfo("amu","1","192.168.100.2",new Socket("192.168.100.2",1235)));
+        gameClients.add(new ClientInfo("kia","0","192.168.100.1"));
+//        gameClients.add(new ClientInfo("ali","1","192.168.100.2"));
 
         ioManager.start();
 

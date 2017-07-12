@@ -8,10 +8,9 @@ public class ClientInfo {
     public String ip;
     public Socket socket;
 
-    public ClientInfo(String name, String id, String ip, Socket socket) {
+    public ClientInfo(String name, String id, String ip) {
         this.name = name;
         this.id = id;
         this.ip = ip;
-        this.socket = socket;
     }
 }
