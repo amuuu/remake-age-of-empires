@@ -1,5 +1,6 @@
 package client;
 
+import client.mapmanage.MoveCamera;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -15,19 +16,19 @@ import static client.mapmanage.variablerepo.Variables.*;
 
 public class ClientManager extends Application{
 
-    static Parent root;
-    static Group window;
-    static Group photos;
-    static Scene scene;
+    private static Group window;
+    private static Group photos;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        root = FXMLLoader.load(getClass().getResource("mapmanage/fxmlmanage/BottomPanel.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("mapmanage/fxmlmanage/BottomPanel.fxml"));
         window = new Group();
         photos = new Group();
         window.getChildren().add(photos);
         window.getChildren().add(root);
-        scene = new Scene(window,WINDOW_WIDTH,WINDOW_HEIGHT);
+        MoveCamera move_c = new MoveCamera(photos);
+        move_c.start();
+        Scene scene = new Scene(window, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         makeManagers();
         initPrintMap();
@@ -59,7 +60,7 @@ public class ClientManager extends Application{
 
     }
     private void mouseMovement(MouseEvent mouseEvent){
-        int mouseMovePace = 5;
+            int mouseMovePace = 5;
 
             int mouseX = (int)mouseEvent.getSceneX();
             int mouseY = (int)mouseEvent.getSceneY();
@@ -68,48 +69,64 @@ public class ClientManager extends Application{
             int end_x = -432;
             int end_y = -766;
             int end_xy = 0;
-                /* ...  left and right ...  */
-            if (mouseX > WINDOW_WIDTH - CAMERA_PADDING) {
-                if (cordinateXTransform > end_x) cordinateXTransform -= mouseMovePace;
+            if (mouseX > WINDOW_WIDTH - CAMERA_PADDING)
+            {
+                if (cordinateXTransform > end_x)
+                {
+                    MoveCamera.right= true;
+                }
+
             }
+            else
+                MoveCamera.right = false;
+
             if (mouseX < CAMERA_PADDING) {
-                if (cordinateXTransform < end_xy) cordinateXTransform += mouseMovePace;
+                if (cordinateXTransform < end_xy){
+                    MoveCamera.left = true;
+                }
             }
+            else
+                MoveCamera.left = false;
                 /*  .. up and down ..  */
             if (mouseY > WINDOW_HEIGHT - 110 && mouseY < WINDOW_HEIGHT - 101) {
-                if (cordinateYTransform > end_y) cordinateYTransform -= mouseMovePace;
+                if (cordinateYTransform > end_y)
+                    MoveCamera.down = true;
             }
+            else
+                MoveCamera.down = false;
             if (mouseY < CAMERA_PADDING) {
-                if (cordinateYTransform < end_xy) cordinateYTransform += mouseMovePace;
+                if (cordinateYTransform < end_xy)
+                    MoveCamera.up = true;
             }
+            else
+                MoveCamera.up = false;
                 /*  ....  */
             if (mouseX > WINDOW_WIDTH - CAMERA_PADDING && mouseY > WINDOW_HEIGHT - 110 && mouseY < WINDOW_HEIGHT - 100) {
                 if (cordinateXTransform > end_x) {
-                    cordinateXTransform -= mouseMovePace;
-                    if (cordinateYTransform > end_y) cordinateYTransform -= mouseMovePace;
+                    if (cordinateYTransform > end_y) MoveCamera.Southeast = true;
                 }
             }
+            else
+                MoveCamera.Southeast = false;
             if (mouseX < CAMERA_PADDING && mouseY > WINDOW_HEIGHT - 110 && mouseY < WINDOW_HEIGHT - 100) {
                 if (cordinateXTransform < end_xy) {
-                    cordinateXTransform += mouseMovePace;
-                    if (cordinateYTransform > end_y) cordinateYTransform -= mouseMovePace;
+                    if (cordinateYTransform > end_y) MoveCamera.Southwest = true;
                 }
             }
+            else
+                MoveCamera.Southwest =false;
+
             if (mouseX < CAMERA_PADDING && mouseY < CAMERA_PADDING) {
                 if (cordinateXTransform < end_xy) {
-                    cordinateXTransform += mouseMovePace;
-                    if (cordinateYTransform < end_xy) cordinateYTransform += mouseMovePace;
+                    if (cordinateYTransform < end_xy) MoveCamera.Northwest = true;
                 }
             }
+            else
+                MoveCamera.Northwest = false;
             if (mouseX > WINDOW_WIDTH - CAMERA_PADDING && mouseY < CAMERA_PADDING) {
                 if (cordinateXTransform > end_x)
-                    cordinateXTransform -= mouseMovePace;
-                if (cordinateYTransform < end_xy) cordinateYTransform += mouseMovePace;
+                    if (cordinateYTransform < end_xy) MoveCamera.Northeast =true;
             }
-                /*  ....  */
-            photos.setLayoutX(cordinateXTransform);
-            photos.setLayoutY(cordinateYTransform);
-
 
     }
     private void mouseClick(MouseEvent mouseEvent){
