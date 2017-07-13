@@ -1,31 +1,29 @@
 package client.iomanage;
 
-public class IOManager extends Thread{
+import java.net.InetAddress;
 
-    MapReceiver mapReciver;
-    MapSender mapSender;
-
-    public IOManager(String ip){
-        mapReciver = new MapReceiver();
-        mapReciver.ip=ip;
-        mapSender = new MapSender();
-    }
+public class IOManager extends Thread {
 
     @Override
-    public void run(){
-        while (true){
-            try {
-                mapSender.sendMap("src/json/map.json");
-                Thread.sleep(500);
-                mapReciver.receiveMap("src/json/map.json");
-                Thread.sleep(500);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    private void handleMap(){
+    public void run() {
+        try {
+            // wait until you receive an ack from server
+            MapReceiver.receiveCommand();
+            // after you got one,
+            if (MapReceiver.command.equals("ackSent")) {
+                // let server know you are willing to send a command
+                MapSender.sendAck(InetAddress.getLocalHost());
+                // send your command
+                MapSender.sendCommand(InetAddress.getLocalHost(), "build 1 in 231 ");
+                MapSender.sendCommand(InetAddress.getLocalHost(), "build 2 in 476 ");
+                MapSender.sendCommand(InetAddress.getLocalHost(), "build 2 in 132 ");
+                MapSender.sendCommand(InetAddress.getLocalHost(), "build 1 in 10 ");
 
+
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

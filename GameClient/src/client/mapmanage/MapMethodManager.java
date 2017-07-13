@@ -12,7 +12,7 @@ public class MapMethodManager {
 
     public static void makeManagers() throws Exception {
         fileManager = new FileManager();
-        ioManager = new IOManager("192.168.100.200");
+        ioManager = new IOManager();
 
     }
 

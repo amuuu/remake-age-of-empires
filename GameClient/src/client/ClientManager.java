@@ -44,7 +44,7 @@ public class ClientManager extends Application{
         primaryStage.setTitle("Age of Empires");
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
-        primaryStage.show();
+//        primaryStage.show();
 
     }
 

@@ -1,44 +1,72 @@
 package server.iomanage;
 
-
-import server.ClientInfo;
-
-import java.io.*;
-import java.net.ServerSocket;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
 
 public class MapSender {
 
-    private ServerSocket serverSocket = null;
+    public static void sendCommand(InetAddress clientIP, String command) throws Exception {
+        Socket socket1;
+        int portNumber = 1777;
+        String sentAck;
+        if(command.equals("ack")) sentAck = "ackSent"; else sentAck = "ackSent";
 
-    public void connectSender(ClientInfo clientInfo) throws IOException {
-        serverSocket = new ServerSocket(15123);
-        Socket socket = serverSocket.accept();
-        clientInfo.socket = socket;
+        socket1 = new Socket(InetAddress.getLocalHost(), portNumber);
 
-        if((socket!=null)||(serverSocket!=null)) {
-            System.out.println("Not connected");
+        BufferedReader br = new BufferedReader(new InputStreamReader(socket1.getInputStream()));
+
+        PrintWriter pw = new PrintWriter(socket1.getOutputStream(), true);
+
+        pw.println(command);
+
+        while ((command = br.readLine()) != null) {
+//            System.out.println(command);
+            pw.println(sentAck);
+
+            if (command.equals(sentAck))
+                break;
         }
 
-        System.out.println("Accepted connection : " + socket);
-    }
+        br.close();
+        pw.flush();
 
-    public void sendMap(String fileName, ClientInfo clientInfo) throws IOException {
-
-        connectSender(clientInfo);
-        int filesize=39600; //2147483647;
-        byte[] bytearray = new byte[filesize];
-
-        FileInputStream fin = new FileInputStream(fileName);
-        BufferedInputStream bin = new BufferedInputStream(fin);
-        bin.read(bytearray, 0, bytearray.length);
-
-        OutputStream os = clientInfo.socket.getOutputStream();
-        System.out.println("Sending Files...");
-        os.write(bytearray, 0, bytearray.length);
-        os.flush();
-        clientInfo.socket.close();
-        System.out.println("File transfer complete");
+        pw.close();
+        socket1.close();
 
     }
+
+    public static void sendAck(InetAddress clientIP) throws Exception {
+        Socket socket1;
+        int portNumber = 1777;
+        String sentAck;
+        String command = "ack";
+        sentAck = "ackSent";
+
+        socket1 = new Socket(InetAddress.getLocalHost(), portNumber);
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(socket1.getInputStream()));
+
+        PrintWriter pw = new PrintWriter(socket1.getOutputStream(), true);
+
+        pw.println(command);
+
+        while ((command = br.readLine()) != null) {
+//            System.out.println(command);
+            pw.println(sentAck);
+
+            if (command.equals(sentAck))
+                break;
+        }
+
+        br.close();
+        pw.flush();
+
+        pw.close();
+        socket1.close();
+    }
+
+
 }
