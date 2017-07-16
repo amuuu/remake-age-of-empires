@@ -7,20 +7,18 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonWriter;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 
 public class JsonManager {
 
-    JsonArray objs;
+    private static JsonArray mapObjects;
 
+    // reads a json map file
     public void readJsonMap(String fileName){
         try {
             JsonParser parser = new JsonParser();
@@ -28,29 +26,25 @@ public class JsonManager {
                     .getAsJsonObject().getAsJsonArray("layers").get(0)
                     .getAsJsonObject().getAsJsonArray("data");
 
-            this.objs = data;
+            this.mapObjects = data;
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    // converts jsonArray to usable arrayList
     public List<Integer> objectList(){
         Type listType = new TypeToken<List<Integer>>() {}.getType();
-        List<Integer> yourList = new Gson().fromJson(objs, listType);
+        List<Integer> yourList = new Gson().fromJson(mapObjects, listType);
         return yourList;
     }
 
-//    public void writeJsonMapInfo(String fileName) throws Exception{
-//        long size = new File(fileName).length();
-//        int[]move = new int[3]; //from, to, time.
-//        ArrayList<Integer[]> movesList = new ArrayList<>();
-//    }
-
-    public void setHouse(int houseNumber, int houseKind){
+    // sets a new building in json map file
+    public static void setHouse(int houseNumber, int houseKind){
         houseNumber = houseNumber-2-41;
         for(int i=0;i<3*40;i+=40) {
             for(int j=0;j<3;j++) {
-                objs.set(houseNumber+j+i, new JsonPrimitive(houseKind));
+                mapObjects.set(houseNumber+j+i, new JsonPrimitive(houseKind));
             }
         }
 
@@ -63,8 +57,8 @@ public class JsonManager {
             jsonWriter.beginObject();
             jsonWriter.name("data");
             jsonWriter.beginArray();
-            for(int i=0; i<objs.size();i++) {
-                jsonWriter.value(objs.get(i).getAsInt());
+            for(int i = 0; i< mapObjects.size(); i++) {
+                jsonWriter.value(mapObjects.get(i).getAsInt());
             }
             jsonWriter.endArray();
             jsonWriter.endObject();

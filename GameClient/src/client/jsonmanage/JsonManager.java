@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonWriter;
+import javafx.application.Platform;
 
 import java.io.File;
 import java.io.FileReader;
@@ -16,10 +17,15 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import static client.ClientManager.photos;
+import static client.mapmanage.MapMethodManager.initPrintMap;
+import static client.mapmanage.variablerepo.Consts.TOTAL_HOUSE_NUMBER;
+import static client.mapmanage.variablerepo.Variables.mapImages;
+
 
 public class JsonManager {
 
-    JsonArray objs;
+    static JsonArray objs;
 
     public void readMap() {
         readJsonMap("src/json/map.json");
@@ -50,7 +56,7 @@ public class JsonManager {
 //        ArrayList<Integer[]> movesList = new ArrayList<>();
 //    }
 
-    public void setHouse(int houseNumber, int houseKind){
+    public static void setHouse(int houseNumber, int houseKind){
         houseNumber = houseNumber-2-41;
         for(int i=0;i<3*40;i+=40) {
             for(int j=0;j<3;j++) {
@@ -79,5 +85,19 @@ public class JsonManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                // Update UI here.
+                try {
+                    initPrintMap();
+                    for (int i = 0; i < TOTAL_HOUSE_NUMBER; i++)
+                        photos.getChildren().add(mapImages[i]);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

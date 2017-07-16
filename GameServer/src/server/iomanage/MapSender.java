@@ -1,5 +1,7 @@
 package server.iomanage;
 
+import server.ClientInfo;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -8,9 +10,9 @@ import java.net.Socket;
 
 public class MapSender {
 
-    public static void sendCommand(InetAddress clientIP, String command) throws Exception {
+    static void sendCommand(ClientInfo clientInfo, String command) throws Exception {
         Socket socket1;
-        int portNumber = 1777;
+        int portNumber = 1777+clientInfo.id+1;
         String sentAck;
         if(command.equals("ack")) sentAck = "ackSent"; else sentAck = "ackSent";
 
@@ -38,11 +40,11 @@ public class MapSender {
 
     }
 
-    public static void sendAck(InetAddress clientIP) throws Exception {
+    static void sendAck(ClientInfo clientInfo) throws Exception {
         Socket socket1;
         int portNumber = 1777;
         String sentAck;
-        String command = "ack";
+        String command = "ack your id is "+(clientInfo.id+1)+"";
         sentAck = "ackSent";
 
         socket1 = new Socket(InetAddress.getLocalHost(), portNumber);
@@ -67,6 +69,5 @@ public class MapSender {
         pw.close();
         socket1.close();
     }
-
 
 }

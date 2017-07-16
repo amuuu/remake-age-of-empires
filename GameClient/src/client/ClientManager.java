@@ -1,7 +1,9 @@
 package client;
 
+import client.jsonmanage.JsonManager;
 import client.mapmanage.MoveCamera;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
@@ -17,7 +19,7 @@ import static client.mapmanage.variablerepo.Variables.*;
 public class ClientManager extends Application{
 
     private static Group window;
-    private static Group photos;
+    public static Group photos;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -44,7 +46,7 @@ public class ClientManager extends Application{
         primaryStage.setTitle("Age of Empires");
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
-//        primaryStage.show();
+        primaryStage.show();
 
     }
 
@@ -138,19 +140,15 @@ public class ClientManager extends Application{
 //                    if(barracksButtonClicked) {
             house_number = returnHouseNumber(mouseX, mouseY);
             System.out.println("house number is " + house_number);
-            mapJSON.setHouse(house_number, 38);
+            JsonManager.setHouse(house_number, 38);
 
-            try {
-                initPrintMap();
-                for (int i = 0; i < TOTAL_HOUSE_NUMBER; i++)
-                    photos.getChildren().add(mapImages[i]);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-//                        barracksButtonClicked = false;
-//                    }
+
+//
         }
     }
+
+
+
 
     public static void main(String[] args) {
         launch(args);

@@ -39,7 +39,7 @@ public class MapSender {
 
     public static void sendAck(InetAddress clientIP) throws Exception {
         Socket socket1;
-        int portNumber = 1777+1;
+        int portNumber = 1777+ClientInfo.id;
         String sentAck;
         String command = "ack";
         sentAck = "ackSent";

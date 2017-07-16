@@ -12,7 +12,9 @@ public class MapReceiver {
 
     public static void receiveCommand() throws Exception{
 
-        int cTosPortNumber = 1777 ;//+ ClientInfo.id;
+        int cTosPortNumber;
+        if(ClientInfo.id==0) cTosPortNumber= 1777;
+        else cTosPortNumber= 1777 + ClientInfo.id;
         String sentAck = "ackSent";
 
         ServerSocket servSocket = new ServerSocket(cTosPortNumber);
@@ -31,6 +33,17 @@ public class MapReceiver {
                 pw.println(sentAck);
                 break;
             } else {
+                if(CommandInterpreter.getWordFromString(1,command).equals("ack")){
+                    ClientInfo.id=Integer.parseInt(CommandInterpreter.getWordFromString(5,command));
+                    System.out.println("my id is "+ ClientInfo.id);
+//                    System.out.println("my port is "+ cTosPortNumber);
+                }
+                else{
+//                    System.out.println("my port is "+ cTosPortNumber);
+
+                    CommandInterpreter.interpretCommand(command);
+                }
+
                 command = "Server returns " + command;
                 pw.println(command);
             }
@@ -40,6 +53,7 @@ public class MapReceiver {
         br.close();
         fromClientSocket.close();
         servSocket.close();
+
 
     }
 

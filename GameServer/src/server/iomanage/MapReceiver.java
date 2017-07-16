@@ -14,7 +14,7 @@ public class MapReceiver {
 
     public static void receiveCommand(ClientInfo clientInfo) throws Exception{
 
-        int cTosPortNumber = 1777 + 1;
+        int cTosPortNumber = 1777 + clientInfo.id+1;
         String sentAck = "ackSent";
 
         ServerSocket servSocket = new ServerSocket(cTosPortNumber);
