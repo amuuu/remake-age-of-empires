@@ -19,30 +19,38 @@ public class IOManager extends Thread {
 
     @Override
     public void run() {
-        try {
-            // wait until you receive an ack from server
-            MapReceiver.receiveCommand();
-            // after you got one,
-            if (MapReceiver.command.equals("ackSent")) {
-                // let server know you are willing to send a command
-                MapSender.sendAck("127.0.0.1");
+        while (true) {
+            try {
+                // wait until you receive an ack from server
+                MapReceiver.receiveCommand();
+                // after you got one,
+                if (MapReceiver.command.equals("ackSent")) {
+                    // let server know you are willing to send a command
+                    MapSender.sendAck(ClientInfo.serverIP);
 
-                sendCommands();
-                Thread.sleep(100);
-                receiveCommands();
-                Thread.sleep(100);
+                    sendCommands();
+                    Thread.sleep(100);
+                    receiveCommands();
+                    Thread.sleep(100);
 
 
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
     private void sendCommands() throws Exception{
         for (int[] buildCommand : buildCommands) {
-            MapSender.sendCommand(InetAddress.getLocalHost().toString(), "build " + buildCommand[0] + " in " + buildCommand[1] + "");
+            if(buildCommand[0]!=1) {
+                MapSender.sendCommand(ClientInfo.serverIP, "build " + buildCommand[0] + " in " + buildCommand[1] + "");
+                buildCommand[0]=1;
+            }
         }
+        MapSender.sendCommand(ClientInfo.serverIP, "end");
+
+
     }
 
     private void receiveCommands() throws Exception{

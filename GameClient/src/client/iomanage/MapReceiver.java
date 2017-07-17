@@ -40,6 +40,7 @@ public class MapReceiver {
                 if(CommandInterpreter.getWordFromString(1,command).equals("ack")){
                     ClientInfo.id=Integer.parseInt(CommandInterpreter.getWordFromString(5,command));
                     System.out.println("my id is "+ ClientInfo.id);
+                    ClientInfo.serverIP=CommandInterpreter.getWordFromString(9,command);
 //                    System.out.println("my port is "+ cTosPortNumber);
                 }
                 else{

@@ -39,30 +39,38 @@ public class IOManager extends Thread{
     int index=0;
 
     @Override
-    public void run(){
+    public void run() {
         try {
             Thread.sleep(5000);
-            for(int i=0;i<gameClients.size();i++) {
-                // send ack to client
-                MapSender.sendAck(gameClients.get(i));
-//                Thread.sleep(1000);
-                // after client knows you, receive his ack
-                MapReceiver.receiveCommand(gameClients.get(i));
-                // if the message was received right,
-                if(MapReceiver.command.equals("ackSent")) {
-
-                    receiveCommands(i);
-                    for(int a=0;a<buildCommands.size();a++) System.out.print(buildCommands.get(i)[1]);;
-                    Thread.sleep(100);
-                    broadcastMap(i);
-                    Thread.sleep(100);
-
-
-
-                }
-            }
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+        while (true) {
+            try {
+                Thread.sleep(100);
+
+                for (int i = 0; i < gameClients.size(); i++) {
+                    // send ack to client
+                    MapSender.sendAck(gameClients.get(i));
+//                Thread.sleep(1000);
+                    // after client knows you, receive his ack
+                    MapReceiver.receiveCommand(gameClients.get(i));
+                    // if the message was received right,
+                    if (MapReceiver.command.equals("ackSent")) {
+
+                        receiveCommands(i);
+                        for (int a = 0; a < buildCommands.size(); a++) System.out.print(buildCommands.get(i)[1]);
+                        ;
+                        Thread.sleep(100);
+                        broadcastMap(i);
+                        Thread.sleep(100);
+
+
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
