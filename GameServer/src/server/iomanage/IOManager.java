@@ -52,15 +52,12 @@ public class IOManager extends Thread{
                 for (int i = 0; i < gameClients.size(); i++) {
                     // send ack to client
                     MapSender.sendAck(gameClients.get(i));
-//                Thread.sleep(1000);
                     // after client knows you, receive his ack
                     MapReceiver.receiveCommand(gameClients.get(i));
                     // if the message was received right,
                     if (MapReceiver.command.equals("ackSent")) {
 
                         receiveCommands(i);
-                        for (int a = 0; a < buildCommands.size(); a++) System.out.print(buildCommands.get(i)[1]);
-                        ;
                         Thread.sleep(100);
                         broadcastMap(i);
                         Thread.sleep(100);
@@ -86,10 +83,10 @@ public class IOManager extends Thread{
 
     private void broadcastMap(int i) throws Exception{
         for (int[] buildCommand : buildCommands) {
-            if (buildCommand[1] != 0) {
+            if (buildCommand[1] != 1) {
                 MapSender.sendCommand(gameClients.get(i), "build " + buildCommand[1] + " in " + buildCommand[2] + "");
                 System.out.println("done");
-                buildCommand[1] = 0;
+                buildCommand[1] = 1;
                 Thread.sleep(10);
             }
         }

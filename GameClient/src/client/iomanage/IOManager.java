@@ -60,6 +60,7 @@ public class IOManager extends Thread {
             MapReceiver.receiveCommand();
             System.out.println(m++);
             Thread.sleep(10);
+            System.out.println("received command from server");
         }
     }
 }

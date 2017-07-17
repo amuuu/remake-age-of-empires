@@ -14,7 +14,7 @@ public class MapSender {
         String sentAck;
         if(command.equals("ack")) sentAck = "ackSent"; else sentAck = "ackSent";
 
-        socket1 = new Socket(InetAddress.getLocalHost(), portNumber);
+        socket1 = new Socket(ClientInfo.serverIP, portNumber);
 
         BufferedReader br = new BufferedReader(new InputStreamReader(socket1.getInputStream()));
 
@@ -44,7 +44,7 @@ public class MapSender {
         String command = "ack";
         sentAck = "ackSent";
 
-        socket1 = new Socket(InetAddress.getLocalHost(), portNumber);
+        socket1 = new Socket(ClientInfo.serverIP, portNumber);
 
         BufferedReader br = new BufferedReader(new InputStreamReader(socket1.getInputStream()));
 

@@ -44,7 +44,7 @@ public class MapSender {
         Socket socket1;
         int portNumber = 1777;
         String sentAck;
-        String command = "ack your id is "+(clientInfo.id+1)+" server ip is ?";
+        String command = "ack your id is "+(clientInfo.id+1)+" server ip is 192.168.100.1";
         sentAck = "ackSent";
 
         System.out.println(clientInfo.ip);
