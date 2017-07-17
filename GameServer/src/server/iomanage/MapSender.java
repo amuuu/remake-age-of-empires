@@ -16,7 +16,7 @@ public class MapSender {
         String sentAck;
         if(command.equals("ack")) sentAck = "ackSent"; else sentAck = "ackSent";
 
-        socket1 = new Socket(InetAddress.getLocalHost(), portNumber);
+        socket1 = new Socket(clientInfo.ip, portNumber);
 
         BufferedReader br = new BufferedReader(new InputStreamReader(socket1.getInputStream()));
 
@@ -44,10 +44,13 @@ public class MapSender {
         Socket socket1;
         int portNumber = 1777;
         String sentAck;
-        String command = "ack your id is "+(clientInfo.id+1)+"";
+        String command = "ack your id is "+(clientInfo.id+1)+" server ip is ?";
         sentAck = "ackSent";
 
-        socket1 = new Socket(InetAddress.getLocalHost(), portNumber);
+        System.out.println(clientInfo.ip);
+        socket1 = new Socket(clientInfo.ip, portNumber);
+        System.out.println("socket is made fine");
+
 
         BufferedReader br = new BufferedReader(new InputStreamReader(socket1.getInputStream()));
 

@@ -11,6 +11,8 @@ import java.net.Socket;
 public class MapReceiver {
 
     public static String command;
+    public static String m;
+
 
     public static void receiveCommand(ClientInfo clientInfo) throws Exception{
 
@@ -32,6 +34,7 @@ public class MapReceiver {
                 pw.println(sentAck);
                 break;
             } else {
+                m = command;
                 CommandInterpreter.interpretCommand(command, clientInfo.id);
 
                 command = "Server returns " + command;

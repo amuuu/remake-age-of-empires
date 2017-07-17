@@ -60,7 +60,7 @@ public class CommandInterpreter {
         buildCommands.add(interpretedBuildCommand);
 
         try {
-            new CommandApplier().applyBuildCommand(0);
+            new CommandApplier().applyBuildCommand(buildCommands.size()-1);
         } catch (Exception e) {
             e.printStackTrace();
         }

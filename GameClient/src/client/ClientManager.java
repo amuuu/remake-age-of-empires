@@ -1,5 +1,6 @@
 package client;
 
+import client.iomanage.MapSender;
 import client.jsonmanage.JsonManager;
 import client.mapmanage.MoveCamera;
 import javafx.application.Application;
@@ -131,7 +132,7 @@ public class ClientManager extends Application{
             }
 
     }
-    private void mouseClick(MouseEvent mouseEvent){
+    private void mouseClick(MouseEvent mouseEvent) {
         int house_number;
         int mouseX = (int)mouseEvent.getSceneX() - cordinateXTransform;
         int mouseY = (int)mouseEvent.getSceneY() - cordinateYTransform;
@@ -142,6 +143,11 @@ public class ClientManager extends Application{
             System.out.println("house number is " + house_number);
             JsonManager.setHouse(house_number, 38);
 
+//            try {
+//                MapSender.sendCommand("127.0.0.1","build "+38+" in "+house_number+"");
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
 
 //
         }

@@ -86,14 +86,15 @@ public class JsonManager {
             e.printStackTrace();
         }
 
+        // Updating UI.
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                // Update UI here.
                 try {
                     initPrintMap();
                     for (int i = 0; i < TOTAL_HOUSE_NUMBER; i++)
                         photos.getChildren().add(mapImages[i]);
+                    System.out.println("applying done");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

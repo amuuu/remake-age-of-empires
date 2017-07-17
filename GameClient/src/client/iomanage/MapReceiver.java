@@ -8,7 +8,8 @@ import java.net.Socket;
 
 public class MapReceiver {
 
-    public static String command;
+    static String command;
+    static String m="";
 
     public static void receiveCommand() throws Exception{
 
@@ -18,9 +19,11 @@ public class MapReceiver {
         String sentAck = "ackSent";
 
         ServerSocket servSocket = new ServerSocket(cTosPortNumber);
-        System.out.println("Waiting for a connection on " + cTosPortNumber);
+//        while (!servSocket.isClosed()) Thread.sleep(1);
+        System.out.println("Waiting for a connection on " + cTosPortNumber) ;
 
         Socket fromClientSocket = servSocket.accept();
+        System.out.println("|-> " + fromClientSocket.getPort());
 
         PrintWriter pw = new PrintWriter(fromClientSocket.getOutputStream(), true);
 
@@ -33,6 +36,7 @@ public class MapReceiver {
                 pw.println(sentAck);
                 break;
             } else {
+                m=command;
                 if(CommandInterpreter.getWordFromString(1,command).equals("ack")){
                     ClientInfo.id=Integer.parseInt(CommandInterpreter.getWordFromString(5,command));
                     System.out.println("my id is "+ ClientInfo.id);
@@ -48,11 +52,13 @@ public class MapReceiver {
                 pw.println(command);
             }
         }
+
         pw.flush();
         pw.close();
         br.close();
         fromClientSocket.close();
         servSocket.close();
+
 
 
     }

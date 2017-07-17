@@ -25,17 +25,33 @@ public class IOManager extends Thread {
             // after you got one,
             if (MapReceiver.command.equals("ackSent")) {
                 // let server know you are willing to send a command
-                MapSender.sendAck(InetAddress.getLocalHost());
-                // send your command
-//                MapSender.sendCommand(InetAddress.getLocalHost(), "build 1 in 231 ");
-//                MapSender.sendCommand(InetAddress.getLocalHost(), "build 1 in 10 ");
+                MapSender.sendAck("127.0.0.1");
 
-                MapReceiver.receiveCommand();
+                sendCommands();
+                Thread.sleep(100);
+                receiveCommands();
+                Thread.sleep(100);
 
 
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void sendCommands() throws Exception{
+        for (int[] buildCommand : buildCommands) {
+            MapSender.sendCommand(InetAddress.getLocalHost().toString(), "build " + buildCommand[0] + " in " + buildCommand[1] + "");
+        }
+    }
+
+    private void receiveCommands() throws Exception{
+        int m=1;
+        while(!MapReceiver.m.equals("end")) {
+            Thread.sleep(10);
+            MapReceiver.receiveCommand();
+            System.out.println(m++);
+            Thread.sleep(10);
         }
     }
 }

@@ -8,7 +8,7 @@ import java.net.Socket;
 
 public class MapSender {
 
-    public static void sendCommand(InetAddress clientIP, String command) throws Exception {
+    public static void sendCommand(String ip, String command) throws Exception {
         Socket socket1;
         int portNumber = 1777+1;
         String sentAck;
@@ -37,7 +37,7 @@ public class MapSender {
         socket1.close();
     }
 
-    public static void sendAck(InetAddress clientIP) throws Exception {
+    public static void sendAck(String ip) throws Exception {
         Socket socket1;
         int portNumber = 1777+ClientInfo.id;
         String sentAck;

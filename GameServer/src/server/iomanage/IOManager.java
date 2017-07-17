@@ -29,7 +29,14 @@ public class IOManager extends Thread{
         moveCommands = new ArrayList<>();
         fightCommands = new ArrayList<>();
         serverjsonmanager = new JsonManager();
+
+        int[]m = {1,38,45}; buildCommands.add(m);
+        int[]m2 = {1,38,105}; buildCommands.add(m2);
+        int[]m3 = {1,38,155}; buildCommands.add(m3);
+
     }
+
+    int index=0;
 
     @Override
     public void run(){
@@ -43,13 +50,14 @@ public class IOManager extends Thread{
                 MapReceiver.receiveCommand(gameClients.get(i));
                 // if the message was received right,
                 if(MapReceiver.command.equals("ackSent")) {
-                    // now receive his command
-//                    MapReceiver.receiveCommand(gameClients.get(i));
-//                    MapReceiver.receiveCommand(gameClients.get(i));
 
-                    MapSender.sendCommand(gameClients.get(i),"build 38 in 61");
-//                    Thread.sleep(1000);
-//                    MapSender.sendCommand(gameClients.get(i).ip,"build 38 in 467");
+                    receiveCommands(i);
+                    for(int a=0;a<buildCommands.size();a++) System.out.print(buildCommands.get(i)[1]);;
+                    Thread.sleep(100);
+                    broadcastMap(i);
+                    Thread.sleep(100);
+
+
 
                 }
             }
@@ -58,7 +66,29 @@ public class IOManager extends Thread{
         }
     }
 
-    private void handleCommand(String command) {
+    private void receiveCommands(int i) throws Exception{
+        int m=1;
+        while(!MapReceiver.m.equals("end")) {
+            Thread.sleep(10);
+            MapReceiver.receiveCommand(gameClients.get(i));
+            System.out.println(m++);
+            Thread.sleep(10);
+        }
+    }
+
+    private void broadcastMap(int i) throws Exception{
+        for (int[] buildCommand : buildCommands) {
+            if (buildCommand[1] != 0) {
+                MapSender.sendCommand(gameClients.get(i), "build " + buildCommand[1] + " in " + buildCommand[2] + "");
+                System.out.println("done");
+                buildCommand[1] = 0;
+                Thread.sleep(10);
+            }
+        }
+        MapSender.sendCommand(gameClients.get(i),"end");
+    }
+
+    private void listenToCommands(){
 
     }
 
